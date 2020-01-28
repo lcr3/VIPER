@@ -41,8 +41,6 @@ extension QiitaRequest {
 
     func response(from data: Data, urlResponse: URLResponse) throws -> Response {
         let decoder = JSONDecoder()
-//        decoder.keyDecodingStrategy = .convertFromSnakeCase // ここでsnakeCaseからの変換を指定
-//        print(String(data: data, encoding: String.Encoding.utf8) ?? "")
 
         if case (200..<300)? = (urlResponse as? HTTPURLResponse)?.statusCode {
             do {
@@ -78,24 +76,4 @@ class QiitaAPI {
             return [URLQueryItem(name: "query", value: keyword)]
         }
     }
-
-//    struct SearchUsers: QiitaRequest {
-//
-//        typealias Response = SearchResponse<User>
-//
-//        let keyword: String
-//
-//        var method: HTTPMethod {
-//            return .get
-//        }
-//
-//        var path: String {
-//            return "/search/users"
-//        }
-//
-//        var queryItems: [URLQueryItem] {
-//            return [URLQueryItem(name: "q", value: keyword)]
-//        }
-//    }
-
 }

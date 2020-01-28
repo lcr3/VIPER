@@ -7,17 +7,6 @@
 //
 
 import Foundation
-/*
- InteractorはPresenterからデータ取得を依頼される
- 完了したらPresenterに通知する
-
- View->Presenter->Interactor
-
- # 命名規則
- プロトコル名: {UsecaseName}Usecase
- 実態名: {UsecaseName}Interactor
-
-*/
 
 protocol SearchArticleUsecase: AnyObject {
 
@@ -35,14 +24,11 @@ class SearchArticleInteractor {
     }
 }
 
-// Interactorのプロトコルに準拠する
 extension SearchArticleInteractor: SearchArticleUsecase {
-
     func fetchArticles(keyword: String,
                            completion: @escaping (Result<[Article], Error>) -> Void) {
         let request = QiitaAPI.SearchArticles(keyword: keyword)
         client.send(request: request) { result in
-//            completion(result.map { $0.items })
             completion(result)
         }
     }

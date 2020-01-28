@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ArticleListView: AnyObject {
-
+    
     func setLastSearchText(_ text: String)
     func showRefreshView()
     func updateArticles(_ Articles: [Article])
@@ -77,7 +77,7 @@ class ArticleListViewController: UIViewController, StoryboardInstantiatable {
 }
 
 // Viewのプロトコルに準拠する
-extension ArticleListViewController: ArticleListView {
+extension ArticleListViewController: ArticleListView {    
 
     func setLastSearchText(_ text: String) {
         searchBar.text = text

@@ -8,43 +8,36 @@
 
 import UIKit
 
-protocol ArticleListWireframe: AnyObject {
-
-    func showArticleDetail(_ article: Article)
+protocol ArticleListWireframe: class {
+    var viewController: UIViewController? { get set }
+    init(viewController: UIViewController?)
+    static func createArticleListModule() -> UIViewController
+     // PRESENTER -> WIREFRAME
+    func showArticleDetail(_article: Article)
 }
 
-class ArticleListRouter {
-    // 画面遷移のためにViewControllerが必要。initで受け取る
-    private unowned let viewController: UIViewController
-
-    private init(viewController: UIViewController) {
+class ArticleListRouter: ArticleListWireframe {
+    
+    weak var viewController: UIViewController?
+    
+    required init(viewController: UIViewController?) {
         self.viewController = viewController
     }
-
-    // DI
-    static func assembleModules() -> UIViewController {
+    
+    static func createArticleListModule() -> UIViewController {
         let view = ArticleListViewController.instantiate()
         let router = ArticleListRouter(viewController: view)
-        let articleInteractor = SearchArticleInteractor()
-        // 生成し、initの引数で渡す
-        let presenter = ArticleListViewPresenter(view: view,
-                                                    router: router,
-                                                    articleInteractor: articleInteractor)
-        view.presenter = presenter    // ViewにPresenterを設定
+        let interactor = SearchArticleInteractor()
 
-        return view
+        let presenter = ArticleListViewPresenter(view: view, router: router, interactor: interactor)
+        view.presenter = presenter
+        
+        return UINavigationController(rootViewController: view)
     }
-}
-
-// Routerのプロトコルに準拠する
-// 遷移する各画面ごとにメソッドを定義
-extension ArticleListRouter: ArticleListWireframe {
-
-    func showArticleDetail(_ article: Article) {
-        // 詳細画面のRouterに依存関係の解決を依頼
-        let detailView = ArticleDetailRouter.assembleModules(article: article)
-        // 詳細画面に遷移
-        // ここで、init時に受け取ったViewControllerを使う
-        viewController.navigationController?.pushViewController(detailView, animated: true)
+    
+    
+    func showArticleDetail(_article: Article) {
+        let detailView = ArticleDetailRouter.assembleModules(article: _article)
+        self.viewController?.navigationController?.pushViewController(detailView, animated: true)
     }
 }

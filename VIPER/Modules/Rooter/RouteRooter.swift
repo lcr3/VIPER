@@ -17,10 +17,9 @@ class RootRouter {
     }
 
     func showFirstView() {
-        let firstView = ArticleListRouter.assembleModules()
-        let navigationController = UINavigationController(rootViewController: firstView)
+        let firstView = ArticleListRouter.createArticleListModule()
 
-        window.rootViewController = navigationController
+        window.rootViewController = firstView
         window.makeKeyAndVisible()
     }
 }

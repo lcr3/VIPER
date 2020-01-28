@@ -11,12 +11,7 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-//    let rootRouter = RootRouter(window: UIWindow(frame: UIScreen.main.bounds))
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//        rootRouter.showFirstView()
-
         return true
     }
 

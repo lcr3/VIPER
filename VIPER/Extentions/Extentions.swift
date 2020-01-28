@@ -9,9 +9,7 @@
 import UIKit
 import Foundation
 
-extension NSObject: ClassNameProtocol {
-
-}
+extension NSObject: ClassNameProtocol {}
 
 public protocol ClassNameProtocol {
     static var className: String { get }

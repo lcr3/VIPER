@@ -8,8 +8,16 @@
 
 import Foundation
 
-protocol ArticleListViewPresentation: AnyObject {
+protocol ArticleListViewPresentation: class {
+    var view: ArticleListView? { get set }
 
+    init(
+        view: ArticleListView?,
+        router: ArticleListWireframe,
+        interactor: SearchArticleUsecase
+    )
+    
+    // VIEW -> PRESENTER
     func viewDidLoad()
     func searchButtonDidPush(searchText: String)
     func refreshControlValueChanged(searchText: String)
@@ -17,24 +25,18 @@ protocol ArticleListViewPresentation: AnyObject {
 }
 
 // MARK:- Presenter
-class ArticleListViewPresenter {
-
-    // View, Interactor, Routerへのアクセスはprotocolを介して行う
-    // Viewは循環参照にならないよう`weak`プロパティ
-    private weak var view: ArticleListView?
+class ArticleListViewPresenter: ArticleListViewPresentation {
+    weak var view: ArticleListView?
     private let router: ArticleListWireframe
-    private let articleInteractor: SearchArticleUsecase
+    private let interactor: SearchArticleUsecase
 
     private var searchText: String = "" {
         didSet {
             guard !searchText.isEmpty else { return }
 
-            view?.setLastSearchText(searchText)
             view?.showRefreshView()
 
-            // Interactorにデータ取得処理を依頼
-            // `@escaping`がついているクロージャの場合は循環参照にならないよう`[weak self]`でキャプチャ
-            articleInteractor.fetchArticles(keyword: searchText) { [weak self] result in
+            interactor.fetchArticles(keyword: searchText) { [weak self] result in
                 switch result {
                 case .success(let articles):
                     self?.articles = articles
@@ -43,15 +45,6 @@ class ArticleListViewPresenter {
                     self?.view?.showErrorMessageView(reason: "エラーが発生しました")
                 }
             }
-//            repositoryInteractor.fetchRepositories(keyword: searchText) { [weak self] result in
-//                switch result {
-//                case .success(let repositories):
-//                    self?.repositories = repositories
-//                case .failure:
-//                    self?.repositories.removeAll()
-//                    self?.view?.showErrorMessageView(reason: "エラーが発生しました")
-//                }
-//            }
         }
     }
 
@@ -61,34 +54,28 @@ class ArticleListViewPresenter {
         }
     }
 
-    init(view: ArticleListView,
-         router: ArticleListWireframe,
-         articleInteractor: SearchArticleUsecase) {
+    required init(view: ArticleListView?, router: ArticleListWireframe, interactor: SearchArticleUsecase) {
         self.view = view
         self.router = router
-        self.articleInteractor = articleInteractor
+        self.interactor = interactor
     }
-
-}
-
-// Presenterのプロトコルに準拠する
-extension ArticleListViewPresenter: ArticleListViewPresentation {
-
+    
     func viewDidLoad() {
+        
     }
-
+    
     func searchButtonDidPush(searchText: String) {
         self.searchText = searchText
     }
-
+    
     func refreshControlValueChanged(searchText: String) {
         self.searchText = searchText
     }
-
+    
     func didSelectRow(at indexPath: IndexPath) {
         guard indexPath.row < articles.count else { return }
 
         let article = articles[indexPath.row]
-        router.showArticleDetail(article) // Routerに画面遷移を依頼
+        router.showArticleDetail(_article: article)
     }
 }

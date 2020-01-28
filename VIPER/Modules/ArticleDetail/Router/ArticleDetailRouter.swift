@@ -9,14 +9,15 @@
 import UIKit
 
 protocol ArticleDetailWireframe: class {
-    
+    var viewController: UIViewController? { get set }
+    init(viewController: UIViewController?)
+    static func assembleModules(article: Article) -> UIViewController
 }
 
-class ArticleDetailRouter {
+class ArticleDetailRouter: ArticleDetailWireframe {
+    weak var viewController: UIViewController?
 
-    private unowned let viewController: UIViewController
-
-    private init(viewController: UIViewController) {
+    required init(viewController: UIViewController?) {
         self.viewController = viewController
     }
 
@@ -31,6 +32,3 @@ class ArticleDetailRouter {
     }
 }
 
-extension ArticleDetailRouter: ArticleDetailWireframe {
-
-}
