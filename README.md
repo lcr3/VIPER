@@ -1,4 +1,7 @@
 # VIPERアーキテクチャサンプル
-参考
-* https://qiita.com/hicka04/items/09534b5daffec33b2bec
-* https://qiita.com/hirothings/items/8ce3ca69efca03bbef88
+
+<img src="./viper.jpeg">
+VIPERアーキテクチャで実装,テストをまとめたサンプルプロジェクト
+
+## Installation
+`$ mint run xcodegen`

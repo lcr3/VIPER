@@ -11,19 +11,13 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    let rootRouter = RootRouter(window: UIWindow(frame: UIScreen.main.bounds))
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let rootRouter = RootRouter(window: window)
-        rootRouter.showFirstView()
-
         self.window = window
-        window.makeKeyAndVisible()
-
+        RootRouter().presentFirstScreen(in: window)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

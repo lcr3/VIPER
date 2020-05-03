@@ -69,3 +69,12 @@ public extension StoryboardInstantiatable where Self: UIViewController {
     }
 }
 
+var mainWindow: UIWindow? {
+    if #available(iOS 13.0, *) {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.windows.first
+        }
+    }
+    return UIApplication.shared.keyWindow
+}
+

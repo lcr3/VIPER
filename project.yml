@@ -1,0 +1,85 @@
+name: VIPER
+
+options:
+  bundleIdPrefix: com.lcr.VIPER
+  deploymentTarget:
+    iOS: 13.0
+  findCarthageFrameworks: true
+  carthageExecutablePath: mint run Carthage/Carthage carthage
+
+settings:
+  base:
+      SWIFT_VERSION: 5.0
+      PRODUCT_NAME: $TARGET_NAME
+      CURRENT_PROJECT_VERSION: 1
+
+targets:
+  VIPER:
+    type: application
+    platform: iOS
+    language: Japanese
+    scheme:
+      testTargets:
+        - VIPERTests
+    sources:
+      - VIPER
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lcr.VIPER
+        INFOPLIST_FILE: VIPER/Info.plist
+    dependencies:
+      - carthage: Alamofire
+    preBuildScripts:
+    postCompileScripts:
+      # Carthage Settings
+      - script: |
+                /usr/local/bin/carthage copy-frameworks
+        name: Carthage Settings
+        inputFiles:
+          - $(SRCROOT)/Carthage/Build/iOS/Alamofire.framework
+    build:
+      - target: VIPER
+
+  VIPERTests:
+    type: bundle.unit-test
+    platform: iOS
+    language: Japanese
+    sources:
+      - VIPERTests
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.lcr.VIPER.test
+      INFOPLIST_FILE: VIPERTests/Info.plist
+    dependencies:
+      - target: VIPER
+      - carthage: Alamofire
+      - carthage: OHHTTPStubs
+
+schemes:
+  VIPER:
+    build:
+      targets:
+        VIPER: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+
+  VIPERTests:
+    build:
+      targets:
+        VIPER: all
+        VIPERTests: testing
+    settings:
+    test:
+      config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - VIPER
+      targets: 
+        - name: VIPERTests
+          parallelizable: false
+          randomExecutionOrder: true
